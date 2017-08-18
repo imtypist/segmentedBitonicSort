@@ -19,15 +19,22 @@ int main(){
 }
 
 void segmentedBitonicSort(float* data, int* seg_id, int* seg_start, int n, int m){
-    float MAXN = 3.402e+38; // close to FLT_MAX
+    if(n <= 0 || m <= 0 || m > n || seg_start[m] != n || seg_id[n-1] != (m-1) || seg_id[0] != 0)   return;
     float a[100000];
     for(int i = 0;i < m;i++){ // m segments to loop
         float* seg = data + seg_start[i]; // this segment's start address
         int len = seg_start[i+1] - seg_start[i]; // length of this segment
         if(len == 0) return;
+        float MAXN = seg[0];
+        for(int k = 1;k < len;k++){
+            if(MAXN != MAXN || seg[k] > MAXN){
+                MAXN = seg[k]; // get the max number of list
+            }
+        }
         int N = 1;
         while(N < len)  N = N << 1; // make clen be power of 2
         //float* a = new float[N];
+        if(N > 100000) return;
         for(int j = 0;j < len;j++) a[j] = seg[j];
         for(int j = len;j < N;j++) a[j] = MAXN;
         for (int k = 2;k <= N;k = 2*k) {
